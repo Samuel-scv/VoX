@@ -1,18 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { CHARADAS, DURACAO, INTERVALO_DICA } from "./charadas.js";
 import { palavras, contemFrase } from "../../shared/texto.js";
-
-function embaralhar() {
-  const ordem = CHARADAS.map((_, i) => i);
-  for (let i = ordem.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [ordem[i], ordem[j]] = [ordem[j], ordem[i]];
-  }
-  return ordem;
-}
+import { embaralhar } from "../../shared/sorteio.js";
 
 export function useAdivinhar({ ativo = true, falado, resetTranscript, startListening, stopListening }) {
-  const [ordem, setOrdem] = useState(embaralhar);
+  const [ordem, setOrdem] = useState(() => embaralhar(CHARADAS.length));
   const [pos, setPos] = useState(0);
   const [status, setStatus] = useState("parado"); // parado | jogando | resultado
   const [tempo, setTempo] = useState(DURACAO);
@@ -89,7 +81,7 @@ export function useAdivinhar({ ativo = true, falado, resetTranscript, startListe
   // Vai para a próxima charada e já começa a rodada.
   const proxima = () => {
     if (pos + 1 >= ordem.length) {
-      setOrdem(embaralhar());
+      setOrdem(embaralhar(CHARADAS.length));
       setPos(0);
     } else {
       setPos(pos + 1);

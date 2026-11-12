@@ -47,3 +47,9 @@ export function contemFrase(faladoPalavras, frase) {
   }
   return false;
 }
+
+// Palavra exata (aceita só o plural): usada quando um erro do reconhecimento não pode virar punição.
+export function contemExata(faladoPalavras, palavra) {
+  const alvo = norm(palavra);
+  return faladoPalavras.some((p) => p === alvo || p === alvo + "s" || p + "s" === alvo);
+}

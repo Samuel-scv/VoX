@@ -95,7 +95,7 @@ export default function JogoRepetir({ jogo, idiomaOk }) {
                 ))}
               </select>
             </label>
-            <button type="button" onClick={jogo.proxima} className="rounded-lg border border-vox-ink/30 px-4 py-2 text-sm font-semibold">
+            <button type="button" onClick={jogo.trocar} className="rounded-lg border border-vox-ink/30 px-4 py-2 text-sm font-semibold">
               Trocar frase
             </button>
             <button type="button" onClick={jogo.iniciar} className="rounded-lg bg-vox-accent px-5 py-2 text-sm font-semibold text-vox-on hover:bg-vox-accent-hover">

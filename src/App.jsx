@@ -1,6 +1,6 @@
 import { useState } from "react";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-import { useTema, SeletorTema, useRepetir, JogoRepetir, useAdivinhar, JogoAdivinhar } from "./features/rotas.js";
+import { useTema, SeletorTema, useRepetir, JogoRepetir, useAdivinhar, JogoAdivinhar, usePalavraProibida, JogoProibida } from "./features/rotas.js";
 
 const LANGUAGES = [
   { code: "pt-BR", label: "Português (Brasil)" },
@@ -12,6 +12,7 @@ const MODOS = [
   { id: "ditado", label: "Ditado" },
   { id: "repetir", label: "Jogo de repetir" },
   { id: "adivinhar", label: "Adivinhação" },
+  { id: "proibida", label: "Palavra proibida" },
 ];
 
 function Waveform({ active }) {
@@ -56,6 +57,7 @@ function App() {
   const entradaDoJogo = { falado: `${transcript} ${interimTranscript}`, resetTranscript, startListening: reiniciarEscuta, stopListening: () => SpeechRecognition.stopListening() };
   const jogo = useRepetir({ ...entradaDoJogo, ativo: modo === "repetir" });
   const adivinhar = useAdivinhar({ ...entradaDoJogo, ativo: modo === "adivinhar" });
+  const proibida = usePalavraProibida({ ...entradaDoJogo, ativo: modo === "proibida" });
 
   const mudarModo = (novo) => {
     SpeechRecognition.stopListening();
@@ -220,8 +222,10 @@ function App() {
             </div>
           ) : modo === "repetir" ? (
             <JogoRepetir jogo={jogo} idiomaOk={lang === "pt-BR"} />
-          ) : (
+          ) : modo === "adivinhar" ? (
             <JogoAdivinhar jogo={adivinhar} idiomaOk={lang === "pt-BR"} />
+          ) : (
+            <JogoProibida jogo={proibida} idiomaOk={lang === "pt-BR"} />
           )}
         </section>
       </main>

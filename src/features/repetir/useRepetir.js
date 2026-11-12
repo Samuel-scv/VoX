@@ -1,25 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { FRASES } from "./frases.js";
 import { palavras } from "../../shared/texto.js";
+import { lerRecorde, salvarRecorde } from "../../shared/recorde.js";
 import { compararFrase } from "./comparar.js";
 
 const CHAVE_RECORDE = "vox-repetir-recorde";
-
-function lerRecorde() {
-  try {
-    return Number(localStorage.getItem(CHAVE_RECORDE)) || 0;
-  } catch {
-    return 0;
-  }
-}
-
-function salvarRecorde(valor) {
-  try {
-    localStorage.setItem(CHAVE_RECORDE, String(valor));
-  } catch {
-    // sem localStorage (modo privado, por exemplo): o recorde vale só enquanto a página está aberta
-  }
-}
 
 function sortear(excluir) {
   let i;
@@ -35,7 +20,7 @@ export function useRepetir({ ativo = true, falado, resetTranscript, startListeni
   const [status, setStatus] = useState("parado"); // parado | jogando | resultado
   const [tempo, setTempo] = useState(20);
   const [pontos, setPontos] = useState(0);
-  const [recorde, setRecorde] = useState(lerRecorde);
+  const [recorde, setRecorde] = useState(() => lerRecorde(CHAVE_RECORDE));
   const [resultado, setResultado] = useState(null);
 
   const frase = FRASES[indice];
@@ -54,7 +39,7 @@ export function useRepetir({ ativo = true, falado, resetTranscript, startListeni
     setPontos((p) => p + ganho);
     if (ganho > recorde) {
       setRecorde(ganho);
-      salvarRecorde(ganho);
+      salvarRecorde(CHAVE_RECORDE, ganho);
     }
     setStatus("resultado");
   };
@@ -97,12 +82,19 @@ export function useRepetir({ ativo = true, falado, resetTranscript, startListeni
     startListening();
   };
 
-  const proxima = () => {
+  // Troca a frase sem começar a rodada (tela de preparação).
+  const trocar = () => {
     stopListening();
     resetTranscript();
     setResultado(null);
     setIndice((i) => sortear(i));
     setStatus("parado");
+  };
+
+  // Vai para a próxima frase e já começa a rodada, ouvindo.
+  const proxima = () => {
+    setIndice((i) => sortear(i));
+    iniciar();
   };
 
   return {
@@ -118,6 +110,7 @@ export function useRepetir({ ativo = true, falado, resetTranscript, startListeni
     resultado,
     iniciar,
     parar: () => finalizar(tempo),
+    trocar,
     proxima,
   };
 }
