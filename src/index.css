@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --color-vox-bg: var(--vox-bg);
+  --color-vox-card: var(--vox-card);
+  --color-vox-ink: var(--vox-ink);
+  --color-vox-accent: var(--vox-accent);
+  --color-vox-accent-hover: var(--vox-accent-hover);
+  --color-vox-rec: var(--vox-rec);
+  --color-vox-on: var(--vox-on);
+}
+
+:root {
+  --vox-bg: #EEF0F7;
+  --vox-card: #FFFFFF;
+  --vox-ink: #1B1F3B;
+  --vox-accent: #3D3BF3;
+  --vox-accent-hover: #2F2DD1;
+  --vox-rec: #F0476B;
+  --vox-on: #FFFFFF;
+}
+
+body {
+  background: var(--vox-bg);
+}
+
+@keyframes vox-wave {
+  0%, 100% { height: 8px; }
+  50% { height: 76px; }
+}
+
+.vox-bar {
+  animation: vox-wave 900ms ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vox-bar {
+    animation: none;
+    height: 28px;
+  }
+}
